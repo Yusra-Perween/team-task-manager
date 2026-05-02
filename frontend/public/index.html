@@ -22,9 +22,13 @@
 
 <script>
 
+// 🔹 BASE URL
+const BASE_URL = "https://team-task-manager-production-d5fd.up.railway.app";
+
+
 // ✅ LOGIN
 async function login() {
-  const res = await fetch("http://localhost:5000/api/auth/login", {
+  const res = await fetch(BASE_URL + "/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -37,7 +41,6 @@ async function login() {
 
   const data = await res.json();
 
-  // ✅ SAVE TOKEN
   localStorage.setItem("token", data.token);
 
   alert("Login successful!");
@@ -48,11 +51,11 @@ async function login() {
 async function createTask() {
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:5000/api/tasks", {
+  const res = await fetch(BASE_URL + "/api/tasks", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer " + token   // ✅ IMPORTANT
+      "Authorization": "Bearer " + token
     },
     body: JSON.stringify({
       title: document.getElementById("title").value,
@@ -67,14 +70,14 @@ async function createTask() {
 }
 
 
-// ✅ DASHBOARD (GET ALL TASKS)
+// ✅ DASHBOARD
 async function dashboard() {
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:5000/api/tasks", {
+  const res = await fetch(BASE_URL + "/api/tasks", {
     method: "GET",
     headers: {
-      "Authorization": "Bearer " + token   // ✅ IMPORTANT
+      "Authorization": "Bearer " + token
     }
   });
 

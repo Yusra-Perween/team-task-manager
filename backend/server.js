@@ -36,3 +36,5 @@ app.listen(PORT, () => {
 
 const taskRoutes = require("./routes/taskRoutes");
 app.use("/api/tasks", taskRoutes);
+
+app.use("/api/dashboard", require("./routes/dashboard"));
