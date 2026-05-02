@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Team Task Manager</title>
+</head>
+<body>
+
+<h2>Login</h2>
+<input id="email" placeholder="Email"><br><br>
+<input id="password" placeholder="Password"><br><br>
+<button onclick="login()">Login</button>
+
+<h2>Create Task</h2>
+<input id="title" placeholder="Title"><br><br>
+<input id="desc" placeholder="Description"><br><br>
+<button onclick="createTask()">Create Task</button>
+
+<h2>Dashboard</h2>
+<button onclick="dashboard()">Get Tasks</button>
+
+<pre id="output"></pre>
+
+<script>
+
+// ✅ LOGIN
+async function login() {
+  const res = await fetch("http://localhost:5000/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
+
+  const data = await res.json();
+
+  // ✅ SAVE TOKEN
+  localStorage.setItem("token", data.token);
+
+  alert("Login successful!");
+}
+
+
+// ✅ CREATE TASK
+async function createTask() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("http://localhost:5000/api/tasks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token   // ✅ IMPORTANT
+    },
+    body: JSON.stringify({
+      title: document.getElementById("title").value,
+      description: document.getElementById("desc").value,
+      status: "To Do"
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("output").innerText =
+    JSON.stringify(data, null, 2);
+}
+
+
+// ✅ DASHBOARD (GET ALL TASKS)
+async function dashboard() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("http://localhost:5000/api/tasks", {
+    method: "GET",
+    headers: {
+      "Authorization": "Bearer " + token   // ✅ IMPORTANT
+    }
+  });
+
+  const data = await res.json();
+  document.getElementById("output").innerText =
+    JSON.stringify(data, null, 2);
+}
+
+</script>
+
+</body>
+</html>
